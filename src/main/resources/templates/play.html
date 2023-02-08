@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="htt://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" media="all" th:href="@{/css/style.css}"/>
+<title>「〇×クイズ」アプリ：PLAY</title>
+</head>
+<body>
+	<div class="center">
+		<h1><i class="far fa-lightbulb"></i><span>「〇×クイズ」アプリ：PLAY</span></h1>
+		<h2>クイズ</h2>
+		<th:block th:if="${msg}">
+			<p th:text="${msg}" style="color:red"></p>
+			<a th:href="@{/quiz/}">CRUD画面</a>
+		</th:block>
+	
+		<th:block th:unless="${msg}">
+		
+			<p th:text="${quizForm.question}">クイズ内容</p>
+			<form th:action="@{/quiz/check}" th:object="${quizForm}" method="POST">
+				<input type="hidden" th:field="*{id}">
+				<button class="btn" name="answer" value="true">〇</button>
+				<button class="btn" name="answer" value="false">×</button>
+				
+			</form>
+		
+		</th:block>
+	</div>
+</body>
+</html>
