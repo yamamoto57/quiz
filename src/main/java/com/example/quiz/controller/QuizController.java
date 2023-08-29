@@ -63,50 +63,29 @@ public class QuizController {
 	@GetMapping("/{id}")
 	public String showUpdate(QuizForm quizForm, @PathVariable Integer id, Model model) {
 		Optional<Quiz> quizOpt = service.selectOneById(id);
-//		Optional<QuizForm> quizFormOpt = quizOpt.map(t -> makeQuizForm(t));
+		Optional<QuizForm> quizFormOpt = quizOpt.map(t -> makeQuizForm(t));
 		
-//		****************** 1 ******************
-		Optional<QuizForm> quizFormOpt = quizOpt.map(t -> {
-			QuizForm form = new QuizForm();
-			
-			form.setId(t.getId());
-			form.setQuestion(t.getQuestion());
-			form.setAnswer(t.getAnswer());
-			form.setAuthor(t.getAuthor());
-			form.setNewQuiz(false);
-			return Optional.of(form).get();
-		});
+		//　匿名クラスからラムダ式に変換は以下を参照
+		// https://www.bold.ne.jp/engineer-club/java-lambda-expression
 		
-//		****************** 2 ******************
-//		Function<Quiz, Optional<QuizForm>> fnc = (quiz) -> {
-//			QuizForm form = new QuizForm();
-//			
-//			form.setId(quiz.getId());
-//			form.setQuestion(quiz.getQuestion());
-//			form.setAnswer(quiz.getAnswer());
-//			form.setAuthor(quiz.getAuthor());
-//			form.setNewQuiz(false);
-//			return Optional.of(form);
-//		};
-//		
-//		Optional<QuizForm> quizFormOpt = fnc.apply(quizOpt.get());
-		
-//		****************** 3 ******************
-//		Optional<QuizForm> quizFormOpt = new Function<Quiz, Optional<QuizForm>>() {
+		// 匿名クラス
+//		Optional<QuizForm> quizFormOpt = quizOpt.map(new Function<Quiz, QuizForm>() {
 //
 //			@Override
-//			public Optional<QuizForm> apply(Quiz quiz) {
-//				QuizForm form = new QuizForm();
-//				
-//				form.setId(quiz.getId());
-//				form.setQuestion(quiz.getQuestion());
-//				form.setAnswer(quiz.getAnswer());
-//				form.setAuthor(quiz.getAuthor());
-//				form.setNewQuiz(false);
-//				return Optional.of(form);
+//			public QuizForm apply(Quiz t) {
+//				return makeQuizForm(t);
 //			}
-//			
-//		}.apply(quizOpt.get());
+//		});
+		
+		// ローカルクラス
+//		Function<Quiz, Optional<QuizForm>> func = new Function<>() {
+//
+//			@Override
+//			public Optional<QuizForm> apply(Quiz t) {
+//				return Optional.of(makeQuizForm(t));
+//			}
+//		};
+//		Optional<QuizForm> quizFormOpt = func.apply(quizOpt.get());
 		
 		if (quizFormOpt.isPresent()) {
 			quizForm = quizFormOpt.get();
