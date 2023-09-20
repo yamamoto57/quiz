@@ -3,6 +3,8 @@ package com.example.quiz.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,13 +36,19 @@ public class QuizController {
 	}
 	
 	@GetMapping
-	public String showList(QuizForm quizForm, Model model) {
+	public String showList(QuizForm quizForm, Model model, Pageable pageable) {
 		quizForm.setNewQuiz(true);
 		
-		Iterable<Quiz> list = service.selectAll();
+//		Iterable<Quiz> list = service.selectAll(pageable);
 		
-		model.addAttribute("list", list);
+//		model.addAttribute("list", list);
 		model.addAttribute("title", "登録用フォーム");
+		// ページネーションの追加
+		Page<Quiz> page = service.findAll(pageable);
+		// 画面で使うページネーションのデータ
+		model.addAttribute("page", page);			// ページデータ
+		model.addAttribute("list", page.getContent());	// 表示データ
+
 		return "crud";
 	}
 	
@@ -56,7 +64,7 @@ public class QuizController {
 			redirectAttributes.addAttribute("complete", "登録が完了しました");
 			return "redirect:/quiz";
 		} else {
-			return showList(quizForm, model);
+			return showList(quizForm, model, null);
 		}
 	}
 	

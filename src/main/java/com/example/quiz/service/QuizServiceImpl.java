@@ -3,6 +3,10 @@ package com.example.quiz.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +20,12 @@ public class QuizServiceImpl implements QuizService {
 	QuizRepository repository;
 	
 	@Override
-	public Iterable<Quiz> selectAll() {
-		return repository.findAll();
+	public Page<Quiz> findAll(Pageable pageable) {
+		// 「Direction.fromString("ASC"), "id"」の部分で「id」列を昇順に並び替えている
+		PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+				Direction.fromString("DESC"), "id");
+		return repository.findAll(pageRequest);
+
 	}
 
 	@Override
